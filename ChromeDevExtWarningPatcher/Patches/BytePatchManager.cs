@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -74,6 +74,15 @@ namespace ChromeDevExtWarningPatcher.Patches {
 						string unparsedByte = unparsedBytes[i].Equals("?") ? "FF" : unparsedBytes[i];
 						patternBytesArr[i] = Convert.ToByte(unparsedByte, 16);
 					}
+					patternClass.AlternativePatternsX64.Add(patternBytesArr);
+				}
+
+				foreach (XElement stringPattern in pattern.Elements("StringPattern")) {
+					byte[] strBytes = System.Text.Encoding.UTF8.GetBytes(stringPattern.Value);
+					byte[] patternBytesArr = new byte[strBytes.Length + 2];
+					patternBytesArr[0] = 0xFE; // Special marker byte for String XREF search
+					patternBytesArr[1] = (byte)strBytes.Length;
+					Array.Copy(strBytes, 0, patternBytesArr, 2, strBytes.Length);
 					patternClass.AlternativePatternsX64.Add(patternBytesArr);
 				}
 

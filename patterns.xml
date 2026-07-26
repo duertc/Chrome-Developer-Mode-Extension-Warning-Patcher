@@ -27,6 +27,7 @@
 	
 		<Pattern name="Remove Debug Warning">
 			<!-- MaybeAddInfoBar; "MaybeAddInfoBar" in the function -->
+			<StringPattern>MaybeAddInfoBar</StringPattern>
 			<BytePattern>41 57 41 56 41 54 56 57 53 48 83 ec ? 48 8b 05 ? ? ? ? 48 31 e0 48 89 44 ? ? 80 79 ? 00 0f 85 ? ? ? ? 48 89 ce 48 83 c2 ? 48 8d 05 ? ? ? ? 48 89 d1 48 89 c2 e8</BytePattern> <!-- Chrome 92 -->
 
 			<BytePattern>41 57 41 56 41 55 41 54 56 57 55 53 48 83 EC ? 48 8B ? ? ? ? ? 48 31 E0 48 89 ? ? ? 80 ? ? ? 0F 85 ? ? ? ? 48 89 CD 48 83 C2 ? 48 8D ? ? ? ? ? 48 89 D1 48 89 C2</BytePattern>  <!-- Brave 92 -->
@@ -36,6 +37,7 @@
 	
 		<Pattern name="Remove Elision">
 			<!-- (ShouldPreventElision)/GetElisionConfig; "jknemblkbdhdcpllfgbfekkdciegfboi" or "omnibox.prevent_url_elisions" in the function or "https://support.google.com/chrome/?p=unauthenticated" 3rd function in the vtable OR IN EDGE: "https://to-be-replaced.invalid/chrome/?p=unauthenticated" or "https://permanently-removed.invalid/chrome/?p=unauthenticated" -->
+			<StringPattern>omnibox.prevent_url_elisions</StringPattern>
 			<BytePattern>41 56 56 57 53 48 83 ec ? 48 8b 05 ? ? ? ? 48 31 e0 48 89 44 ? ? 48 8b 01 ff 90 ? ? ? ? 31 ff 48 85 c0 0f 84 ? ? ? ? ? 8b</BytePattern> <!-- Chr 95, not working for Brave/Edge -->
 
 			<BytePattern>56 57 55 53 48 83 EC ? 48 8B 05 ? ? ? ? 48 31 E0 48 89 ? ? ? 48 8B 01 FF 90 ? ? ? ? 31 FF 48 85 C0</BytePattern> <!-- Brave 95 -->
@@ -76,6 +78,7 @@
 
 		<Pattern name="Enable webRequestBlocking for MV3">
 			<!-- https://source.chromium.org/chromium/chromium/src/+/main:out/Debug/gen/extensions/common/api/permission_features.cc;l=848;drc=f7c258b9edbcebc3fb62f1df4af9d6afd3133d52 https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher/issues/82#issuecomment-1248272748 -->
+			<StringPattern>webRequestBlocking</StringPattern>
 			<BytePattern>48 ? ? ? ? ? ? 4C ? ? ? ? ? ? 48 89 F9 E8 ? ? ? ? 40 ? ? ? ? ? ? C7 83 ? ? ? ? 02 00 00 00 B9 ? ? ? ? E8 ? ? ? ? 48 85 C0</BytePattern> <!-- Chr 110 New, now uses long mov instruction -->
 
 			<BytePattern>48 ? ? E8 ? ? ? ? 40 88 ? ? ? ? ? 44 89 ? ? ? ? ? 48 ? ? ? 48 ? ? ? ? ? ? 4C ? ? ? ? ? ? E8 ? ? ? ? 40 88 ? ? ? ? ? 41 BD 02 00 00 00 44 89 ? ? ? ? ? B9 B8 01 00 00 E8</BytePattern> <!-- Chr 108 -->

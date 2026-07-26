@@ -1,99 +1,70 @@
-# Disable Chromium's and Chrome's Developer Mode Extension Warning Popup & Elision WWW/HTTPS Hiding & Debugging Extension Popup
-**Download** it in the [release section](https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher/releases). **The [.NET 6 DESKTOP Runtime](https://dotnet.microsoft.com/download/dotnet/6.0/runtime) is required**.
+# Chrome & Chromium Developer Mode Extension Warning Patcher
 
-All patterns and patches auto-update with the `patterns.xml` on every install.\
-Note: It seems like Chrome has completely disabled the warning popup anyway, but this patcher still provides other useful patches.
+A lightweight tool to remove Chromium's Developer Mode Extension Warning popup, extension debugging warning, URL elisions, and enable webRequestBlocking for Manifest V3 extensions.
 
-## Supported browsers
-See below for the custom paths (commandline option).
-```javascript
-(✓ represents mostly supported and tested browsers)
-All x64 bit Chromium-based browsers, including:
-- Chrome ✓
-- Chromium ✓
-- Edge ✓
-- Brave ✓
-- Ungoogled Chromium ?
-- Opera ?
-- Yandex Browser
-- Vivaldi
-- Blisk
-- Colibri
-- Epic Browser
-- Iron Browser
-```
+## Tested Versions
+- **Google Chrome**: `131.0.6778.265`
+- **Microsoft Edge**: `135.0.3179.85`
+- **Helium Browser**: `148.0.7778.215`
 
 ## Features
+- Remove Developer Mode Extension Warning popup on browser startup
+- Remove debugging warning bar when using `chrome.debugger` API
+- Disable URL elision (Force showing full HTTPS and WWW in omnibox)
+- Enable `webRequestBlocking` extension API for Manifest V3 extensions
+- Autodetect browser installations on `C:\` and `D:\` drives (Chrome, Edge, Helium) with custom path option
+- Patcher injector using Event Traces for Windows (ETW) with zero overhead
 
-- Intuitive installer GUI
-- Autodetection of browser installations
-- Patcher injector using Event Traces for Windows to minimize cpu usage and to maximize speed
-- Compatibility for Windows 7 - Windows 11
-- SIMD (AVX2) accelerated pattern searching with a fallback for old CPUs
-- Very well documented patterns.xml
-- Easy to compile
-
-### What can it patch
-
-Read the [patterns.xml](https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher/blob/master/patterns.xml) file for more information.
-- Remove extension warning (Removes the warning => main purpose of the patcher)
-- Remove debugging warning (Removes warning when using chrome.debugger in extensions)
-- Disable Elision (Force showing WWW and HTTPS in the url bar/omnibar)
-- Remove crash warning (Remove the "Chromium crashed" popup)
-- Remove send to self (Remove the menu option "Send To Your Devices" when using Google Sync)
-- Remove QR code generation (Remove the context menu option "Create QR code for this page")
-- Enable webRequestBlocking extension API for Manifest V3 extensions
-
-## Gui Screenshot
-![Gui Screenshot](https://raw.githubusercontent.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher/master/media/guiscreenshot.png)
+## Requirement & Usage
+1. **Prerequisite**: [.NET 6.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/6.0/runtime).
+2. **Usage**:
+   - Run `ChromeDevExtWarningPatcher.exe`
+   - Select detected browsers or click **"Add a custom path"** (e.g. `D:\Program Files\Chrome\App`)
+   - Click **Install Patches**
 
 ## Commandline Options
-All commandline options are **optional** and not required. If none are given, the gui will start. **Warning**: The inferior command line cannot uninstall the entire patcher and if you run it with customPath, all other installations will be removed!
-
+```bash
+ChromeDevExtWarningPatcher.exe --customPath "D:\Program Files\Chrome\App"
 ```
-ChromeDevExtWarningPatcher.exe 
-  --groups           Set what patch groups you want to use. See patterns.xml to get the group ids (comma-seperated: 0,1,2,etc.)
+- `--customPath`: Define a custom Application directory path
+- `--groups`: Specify comma-separated patch group IDs (e.g. 0,1,6)
+- `--noWait`: Disable waiting prompt after completion
 
-  -w, --noWait       Disable the almost-pointless wait after finishing
+---
 
-  --customPath       Instead of automatically detecting and patching all chrome.exe files, define a custom Application-folder path
-                     (see README) (string in quotes is recommended)
+# Chromium 开发者模式扩展警告修补工具 (中文说明)
 
-  --help             Display this help screen.
+本工具用于自动移除 Chromium 内核浏览器（如 Chrome / Edge / Helium / Brave）的“请禁用开发者模式扩展”弹窗提示、调试警告条、网址省略隐藏等。
 
-  --version          Display version information.
+## 实测验证版本
+- **Google Chrome**: `131.0.6778.265`
+- **Microsoft Edge**: `135.0.3179.85`
+- **Helium Browser**: `148.0.7778.215`
+
+## 功能特性
+- 自动移除启动时的“请禁用开发者模式扩展”弹窗提示
+- 移除使用 `chrome.debugger` API 时的扩展调试警告条
+- 禁用 URL 省略（强制在地址栏显示完整的 HTTPS 与 WWW）
+- 解禁 Manifest V3 扩展的 `webRequestBlocking` 网络拦截 API
+- 自动识别 `C:\` 与 `D:\` 盘中的浏览器安装路径（Chrome, Edge, Helium），支持自定义路径
+- 基于 ETW 事件追踪的高效后台注入机制，内存占用极低
+
+## 运行依赖与使用方法
+1. **运行依赖**: [.NET 6.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/6.0/runtime)。
+2. **使用方法**:
+   - 运行 `ChromeDevExtWarningPatcher.exe`
+   - 选择检测到的浏览器或点击 **"Add a custom path"**（如 `D:\Program Files\Chrome\App`）
+   - 点击 **Install Patches** 执行修补
+
+## 命令行选项
+```bash
+ChromeDevExtWarningPatcher.exe --customPath "D:\Program Files\Chrome\App"
 ```
+- `--customPath`: 指定自定义浏览器 Application 目录
+- `--groups`: 指定补丁组 ID（逗号分隔，如 0,1,6）
+- `--noWait`: 补丁完成后不等待按键
 
-**Recommended `customPath`s:**
-```java
-Chrome (default): "C:\Program Files (x86)\Google\Chrome\Application"
-Brave: "C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application"
-Edge: "C:\Program Files (x86)\Microsoft\Edge\Application"
+---
 
-Remember: The folder of the path always needs to include the latest version folder of the browser (e. g. 83.0.1123.123).
-(Create a new issue with a path, if you want to contribute to this list.)
-```
-Find more paths [here](https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher/tree/master/ChromeDevExtWarningPatcher/InstallationFinder/Defaults).
-
-## Contributing
-Clone this repository with `git clone --recursive https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher.git` and open the `.sln` file with Visual Studio 2019 or newer.
-
-## Message to Chromium contributors
-This project is not meant for malicious use, especially because patching requires Administrator rights. If an attacker wants to get rid of that notification, they will always be able to do it somehow, since they have access to the computer and to other methods anyway. For example, you could just install a crx-file and allow it with group policies. This makes no sense, because it punishes developers with annoying popups, but crx files that are already packed - and not on the store - can strangely be installed easily.
-
-The idea originates from an answer on StackOverflow that also patched the `chrome.dll` and used to work on old versions.
-
-Used open source libraries:
-- [dahall/taskscheduler](https://github.com/dahall/taskscheduler)
-- [dahall/Vanara](https://github.com/dahall/Vanara)
-- [MaterialDesignInXAML/MaterialDesignInXamlToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)
-- [commandlineparser/commandline](https://github.com/commandlineparser/commandline)
-
-## Copyright
-Chrome-Developer-Mode-Extension-Warning-Patcher is released into the public domain according to the GPL 3.0 license by the copyright holders.
-
-Disclaimer: This repository and the used names "Chrome", "Chromium", "Edge" in this project are not affiliated with or endorsed by Google LLC, Microsoft, The Chromium Project, Microsoft Edge, Google Chrome or other third parties. This repository and the used names "Chrome", "Chromium", "Edge" are also not affiliated with any existing trademarks.
-
-No code was copied or used from any other browser in this repository. Chromium is licensed under the open source BSD License.
-
-This repository does not infringe any copyright of proprietary browsers, as it only patches bytes on the end user's computer, without having any copyright-protected code or text included in this repository.
+## License
+Public domain under [GPL-3.0 License](LICENSE). Original project by Ceiridge, updated and maintained for modern Chromium builds by duertc.

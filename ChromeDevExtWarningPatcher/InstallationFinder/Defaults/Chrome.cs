@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ChromeDevExtWarningPatcher.InstallationFinder.Defaults {
@@ -13,6 +13,9 @@ namespace ChromeDevExtWarningPatcher.InstallationFinder.Defaults {
 
 			AddDllAndExeToList(dllFiles, this.GetLatestDllAndExe(new DirectoryInfo(@"C:\Program Files\Google\Chrome\Application"), "chrome.dll", "chrome.exe"));
 			AddDllAndExeToList(dllFiles, this.GetLatestDllAndExe(new DirectoryInfo(@"C:\Program Files\Google\Chrome Beta\Application"), "chrome.dll", "chrome.exe"));
+
+			AddDllAndExeToList(dllFiles, this.GetLatestDllAndExe(new DirectoryInfo(@"D:\Program Files\Chrome\App"), "chrome.dll", "chrome.exe"));
+			AddDllAndExeToList(dllFiles, this.GetLatestDllAndExe(new DirectoryInfo(@"C:\Program Files\imput\Helium\Application"), "chrome.dll", "chrome.exe"));
 
 			return dllFiles;
 		}

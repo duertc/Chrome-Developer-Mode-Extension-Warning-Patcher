@@ -8,6 +8,43 @@ namespace ChromePatch {
 	// Inspired by http://0x80.pl/articles/simd-strfind.html
 	byte* SimdPatternSearcher::SearchBytePattern(Patch& patch, byte* startAddr, const size_t length) {
 		for (PatchPattern& pattern : patch.patterns) {
+			if (!pattern.pattern.empty() && pattern.pattern[0] == 0xFE && pattern.pattern.size() >= 2) {
+				size_t strLen = pattern.pattern[1];
+				if (pattern.pattern.size() >= 2 + strLen) {
+					const char* strData = reinterpret_cast<const char*>(&pattern.pattern[2]);
+					byte* strAddr = nullptr;
+					
+					MODULEINFO modInfo{};
+					if (GetModuleInformation(GetCurrentProcess(), patches.chromeDll, &modInfo, sizeof(modInfo))) {
+						byte* dllBase = reinterpret_cast<byte*>(modInfo.lpBaseOfDll);
+						size_t dllSize = modInfo.SizeOfImage;
+						for (size_t i = 0; i <= dllSize - strLen; i++) {
+							if (memcmp(dllBase + i, strData, strLen) == 0) {
+								strAddr = dllBase + i;
+								break;
+							}
+						}
+					}
+
+					if (strAddr != nullptr && length >= 7) {
+						for (size_t i = 0; i <= length - 7; i++) {
+							byte b0 = startAddr[i];
+							byte b1 = startAddr[i + 1];
+							byte b2 = startAddr[i + 2];
+							
+							if ((b0 == 0x48 || b0 == 0x4C || b0 == 0x49) && (b1 == 0x8D || b1 == 0x8B) && ((b2 & 0xC7) == 0x05)) {
+								int disp32 = *reinterpret_cast<const int*>(&startAddr[i + 3]);
+								uintptr_t targetAddr = reinterpret_cast<uintptr_t>(&startAddr[i]) + 7 + disp32;
+								if (targetAddr == reinterpret_cast<uintptr_t>(strAddr)) {
+									return &startAddr[i];
+								}
+							}
+						}
+					}
+				}
+				continue;
+			}
+
 			const size_t patternSize = pattern.pattern.size();
 			const __m256i firstByte = _mm256_set1_epi8(pattern.pattern[0]); // Set first __m256i to the first byte
 			const __m256i lastByte = _mm256_set1_epi8(pattern.pattern[patternSize - 1]); // Set first __m256i to the last byte of the pattern
